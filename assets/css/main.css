@@ -1,0 +1,49 @@
+@import "@nuxt/ui";
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  /* =====================
+     FONT
+     ===================== */
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Outfit", sans-serif;
+
+  /* =====================
+     COLOR MAPPING (Tailwind 4)
+     ===================== */
+  --color-primary: var(--ui-primary);
+  --color-primary-light: var(--ui-primary-light);
+  --color-primary-dark: var(--ui-primary-dark);
+}
+
+/* =====================
+   ROOT DESIGN TOKENS
+   ===================== */
+:root {
+  /* PRIMARY (BIRU) */
+  --ui-primary: #005BA1;        /* main */
+  --ui-primary-dark: #003F73;   /* hover / active */
+  --ui-primary-light: #4DA3E0;  /* soft / background */
+
+  /* SUPPORT COLORS */
+  --ui-secondary: #7A5936;
+  --ui-accent: #A2CDB0;
+  --ui-success: #4CAF50;
+  --ui-error: #E63946;
+
+  /* BASE */
+  --ui-background: #ffffff;
+  --ui-foreground: #181818;
+
+  font-family: var(--font-sans);
+}
+
+/* =====================
+   GLOBAL
+   ===================== */
+body {
+  font-family: var(--font-sans);
+  background-color: var(--ui-background);
+  color: var(--ui-foreground);
+}
