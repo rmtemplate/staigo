@@ -65,7 +65,7 @@
           <div class="mt-2">
             <MenuItem
               label="Informasi Data Pribadi"
-              to="/profile/personal"
+              to="/"
               :icon="User"
               chevron
             />
@@ -78,7 +78,7 @@
           <div class="mt-2 divide-y divide-gray-200">
             <MenuItem
               label="Pusat Bantuan"
-              to="/help"
+              to=""
               :icon="CircleHelp"
               chevron
               noTopRadius
@@ -101,7 +101,7 @@
           <div class="mt-2 divide-y divide-gray-200">
             <MenuItem
               label="Syarat &amp; Ketentuan"
-              to="/terms"
+              to=""
               :icon="FileText"
               chevron
               noTopRadius
@@ -109,7 +109,7 @@
             />
             <MenuItem
               label="Kebijakan Privasi"
-              to="/privacy"
+              to=""
               :icon="Shield"
               chevron
               noTopRadius
