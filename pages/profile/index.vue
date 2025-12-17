@@ -1,160 +1,227 @@
-<script setup lang="ts">
-definePageMeta({
-  showBottomBar: true
-})
-</script>
-
 <template>
-  <div class="relative min-h-[100dvh] w-full flex flex-col items-center justify-center overflow-hidden bg-[var(--ui-background)] px-6 py-10 sm:px-10">
-    
-    <div class="absolute inset-0 pointer-events-none opacity-[0.04]" 
-         style="background-image: linear-gradient(var(--ui-primary) 1px, transparent 1px), linear-gradient(to right, var(--ui-primary) 1px, transparent 1px); background-size: 40px 40px;">
-    </div>
-    
-    <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-[var(--ui-primary-light)] rounded-full mix-blend-multiply filter blur-[100px] opacity-20 animate-pulse-slow"></div>
-    <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-[var(--ui-accent)] rounded-full mix-blend-multiply filter blur-[120px] opacity-15 animate-pulse-slow delay-700"></div>
-
-    <div class="relative z-10 w-full max-w-md text-center flex flex-col items-center">
-      
-      <div class="relative w-full h-72 mb-6 flex items-center justify-center">
-        <div class="animate-float">
-          <svg width="280" height="280" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-            
-            <ellipse cx="100" cy="175" rx="50" ry="8" class="fill-[var(--ui-primary)] opacity-20 animate-shadow-scale"/>
-            
-            <circle cx="50" cy="60" r="40" class="fill-[var(--ui-primary-light)] opacity-10"/>
-            <rect x="140" y="40" width="30" height="30" rx="8" class="fill-[var(--ui-secondary)] opacity-10" transform="rotate(15)"/>
-
-            <g class="origin-center">
-               <rect x="50" y="50" width="100" height="130" rx="16" 
-                     class="fill-[var(--ui-background)] stroke-[var(--ui-primary)]" stroke-width="2"/>
-               
-               <path d="M50 80 L150 80" class="stroke-[var(--ui-primary-light)] opacity-30" stroke-width="1"/>
-
-               <circle cx="100" cy="90" r="24" class="fill-[var(--ui-primary-light)] opacity-20 stroke-[var(--ui-primary)]" stroke-width="1.5"/>
-               <path d="M100 82 C103 82 106 85 106 88 C106 91 103 94 100 94 C97 94 94 91 94 88 C94 85 97 82 100 82 Z" class="fill-[var(--ui-primary)] opacity-40"/>
-               <path d="M84 108 C84 100 92 96 100 96 C108 96 116 100 116 108" class="stroke-[var(--ui-primary)] opacity-40" stroke-width="2" stroke-linecap="round"/>
-               
-               <g class="origin-[100px_90px] animate-spin-slow">
-                 <path d="M100 62 A28 28 0 0 1 128 90" class="stroke-[var(--ui-secondary)]" stroke-width="2" stroke-linecap="round"/>
-               </g>
-
-               <rect x="70" y="130" width="60" height="6" rx="3" class="fill-[var(--ui-primary)] opacity-20 animate-pulse"/>
-               <rect x="60" y="145" width="80" height="6" rx="3" class="fill-[var(--ui-primary)] opacity-10 animate-pulse delay-75"/>
-               <rect x="60" y="158" width="80" height="6" rx="3" class="fill-[var(--ui-primary)] opacity-10 animate-pulse delay-150"/>
-            </g>
-
-            <g class="animate-bounce-slow" style="animation-delay: 0.5s;">
-               <circle cx="165" cy="80" r="14" class="fill-[var(--ui-background)] stroke-[var(--ui-primary-dark)]" stroke-width="2"/>
-               <path d="M165 74v12M159 80h12" class="stroke-[var(--ui-primary-dark)]" stroke-width="2"/>
-               <circle cx="165" cy="80" r="4" class="fill-[var(--ui-primary-dark)]"/>
-            </g>
-
-            <g class="animate-bounce-slow" style="animation-delay: 0s;">
-               <rect x="30" y="140" width="28" height="28" rx="8" class="fill-[var(--ui-background)] stroke-[var(--ui-accent)]" stroke-width="2" transform="rotate(-10)"/>
-               <path d="M38 148 L42 158 L50 144" class="stroke-[var(--ui-accent)]" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(-10 44 154)"/>
-            </g>
-            
-            <path d="M152 80 L160 80" class="stroke-[var(--ui-primary-dark)] opacity-30" stroke-width="1" stroke-dasharray="2 2"/>
-            <path d="M48 145 L55 145" class="stroke-[var(--ui-accent)] opacity-30" stroke-width="1" stroke-dasharray="2 2"/>
-
-          </svg>
+  <div class="min-h-screen bg-gray-100">
+    <!-- Top Header -->
+    <header class="bg-primary pb-12">
+      <div class="px-5 pt-10 text-center mb-5">
+        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-orange-500">
+          <span class="text-lg font-bold text-white">{{ user.initials }}</span>
         </div>
+
+        <p class="mt-3 text-[15px] font-semibold text-white">
+          {{ user.name }}
+        </p>
+        <p class="mt-0.5 text-[12px] text-white/80">
+          {{ user.phone }}
+        </p>
       </div>
 
-      <h1 class="font-display text-3xl sm:text-4xl font-bold text-[var(--ui-primary-dark)] mb-3 tracking-tight">
-        Profil Sedang <br/> Diperbarui
-      </h1>
-      
-      <p class="font-sans text-[var(--ui-foreground)] opacity-80 text-base sm:text-lg leading-relaxed mb-8 max-w-xs sm:max-w-sm mx-auto">
-        Kami sedang meningkatkan fitur profil agar data dan privasi Anda lebih aman dan personal.
-      </p>
+      <!-- GoPoin Card -->
+      <section class="px-5" aria-labelledby="gopoin-title">
+        <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-black/5">
+          <article class="flex items-center justify-between gap-4">
+            <div class="min-w-0">
+              <div class="mb-2 flex items-center gap-2">
+                <img
+                  src="/images/icons/icon-point.png"
+                  width="14"
+                  height="14"
+                  class="h-3.5 w-3.5"
+                  alt="Ikon GoPoin"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span class="text-xs font-medium text-gray-700">GoPoin</span>
+              </div>
 
-      <div class="flex flex-col gap-3 w-full max-w-[280px]">
-        
-        <div class="w-full bg-[var(--ui-primary-light)]/20 rounded-full h-1.5 overflow-hidden">
-          <div class="h-full bg-[var(--ui-accent)] w-3/4 animate-loading-bar rounded-full relative overflow-hidden">
-            <div class="absolute inset-0 bg-white/30 w-full h-full animate-shimmer"></div>
+              <h2 id="gopoin-title" class="text-[18px] font-semibold text-gray-900 leading-none">
+                {{ gopoin }}
+              </h2>
+              <p class="mt-2 text-xs font-medium text-gray-500">
+                1 poin setara 1 rupiah
+              </p>
+            </div>
+
+            <div class="shrink-0">
+              <button
+                type="button"
+                class="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary/40"
+                aria-label="Lihat Poin"
+                @click="onViewPoints"
+              >
+                Lihat Poin
+              </button>
+            </div>
+          </article>
+        </div>
+      </section>
+    </header>
+
+    <!-- Menu Wrapper (1:1 seperti desain: putih, rounded atas besar) -->
+    <main class="bg-white -mt-7 rounded-t-4xl">
+      <div class="px-5 pt-5 pb-28 space-y-6">
+        <!-- Data Pribadi -->
+        <section>
+          <p class="text-[14px] font-semibold text-gray-900">Data Pribadi</p>
+          <div class="mt-2">
+            <MenuItem
+              label="Informasi Data Pribadi"
+              to="/profile/personal"
+              :icon="User"
+              chevron
+            />
           </div>
-        </div>
+        </section>
 
-        <div class="flex justify-between items-center text-xs font-medium text-[var(--ui-foreground)] opacity-60">
-          <span>Updating User Data...</span>
-          <span>75%</span>
-        </div>
+        <!-- Layanan Pelanggan -->
+        <section>
+          <p class="text-[14px] font-semibold text-gray-900">Layanan Pelanggan</p>
+          <div class="mt-2 divide-y divide-gray-200">
+            <MenuItem
+              label="Pusat Bantuan"
+              to="/help"
+              :icon="CircleHelp"
+              chevron
+              noTopRadius
+              noBottomRadius
+            />
+            <MenuButton
+              label="Live Chat"
+              :icon="MessageCircle"
+              @click="onLiveChat"
+              noTopRadius
+              noBottomRadius
+              hideChevron
+            />
+          </div>
+        </section>
+
+        <!-- Yang Lain -->
+        <section>
+          <p class="text-[14px] font-semibold text-gray-900">Yang Lain</p>
+          <div class="mt-2 divide-y divide-gray-200">
+            <MenuItem
+              label="Syarat &amp; Ketentuan"
+              to="/terms"
+              :icon="FileText"
+              chevron
+              noTopRadius
+              noBottomRadius
+            />
+            <MenuItem
+              label="Kebijakan Privasi"
+              to="/privacy"
+              :icon="Shield"
+              chevron
+              noTopRadius
+              noBottomRadius
+            />
+          </div>
+        </section>
+
+        <!-- Logout -->
+        <button
+          type="button"
+          class="w-full rounded-full bg-primary py-3 text-[15px] font-semibold text-white shadow-sm active:scale-[0.99] transition"
+          @click="onLogout"
+        >
+          Keluar
+        </button>
       </div>
-
-    </div>
-
-    <div class="absolute bottom-6 w-full text-center">
-      <p class="text-xs font-sans font-medium text-[var(--ui-foreground)] opacity-40">
-        &copy; 2025 Staigo
-      </p>
-    </div>
-
+    </main>
   </div>
 </template>
 
-<style scoped>
-/* ANIMASI (Sama dengan halaman sebelumnya untuk konsistensi) */
+<script setup>
+import { h } from "vue";
+import {
+  User,
+  CircleHelp,
+  MessageCircle,
+  FileText,
+  Shield,
+  ChevronRight,
+} from "lucide-vue-next";
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-}
+definePageMeta({ layout: "default" });
 
-@keyframes shadow-scale {
-  0%, 100% { transform: scaleX(1); opacity: 0.2; }
-  50% { transform: scaleX(0.8); opacity: 0.1; }
-}
+const user = {
+  initials: "RM",
+  name: "Reza Maulana",
+  phone: "085380896861",
+};
 
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
+const gopoin = "550.000";
 
-@keyframes bounce-slow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-}
-
-@keyframes loading-bar {
-  0% { width: 10%; }
-  50% { width: 50%; }
-  100% { width: 75%; }
+function onViewPoints() {
+  console.log("Lihat Poin");
 }
 
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+function onLiveChat() {
+  console.log("Live Chat");
 }
 
-@keyframes pulse-slow {
-  0%, 100% { opacity: 0.1; transform: scale(1); }
-  50% { opacity: 0.25; transform: scale(1.1); }
+function onLogout() {
+  console.log("Keluar");
 }
 
-/* Applying Animation Classes */
-.animate-float {
-  animation: float 5s ease-in-out infinite;
-}
-.animate-shadow-scale {
-  animation: shadow-scale 5s ease-in-out infinite;
-  transform-origin: center;
-}
-.animate-spin-slow {
-  animation: spin-slow 4s linear infinite;
-}
-.animate-bounce-slow {
-  animation: bounce-slow 4s ease-in-out infinite;
-}
-.animate-loading-bar {
-  animation: loading-bar 2s ease-out forwards;
-}
-.animate-shimmer {
-  animation: shimmer 1.5s infinite linear;
-}
-.animate-pulse-slow {
-  animation: pulse-slow 5s ease-in-out infinite;
-}
-</style>
+/**
+ * MenuItem (NuxtLink) & MenuButton (button)
+ * dibuat inline biar 1 file, dan styling 1:1 (compact, flat, divider).
+ */
+const baseRow =
+  "w-full flex items-center gap-3 py-3 text-left bg-white";
+
+const iconWrap =
+  "h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center shrink-0";
+
+const labelCls = "flex-1 text-[13px] font-medium text-gray-700";
+
+const cardCls = (noTopRadius, noBottomRadius) => {
+  const top = noTopRadius ? "" : "rounded-t-2xl";
+  const bottom = noBottomRadius ? "" : "rounded-b-2xl";
+  return `overflow-hidden  ${top} ${bottom}`.trim();
+};
+
+const MenuItem = (props) =>
+  h(
+    "div",
+    { class: cardCls(props.noTopRadius, props.noBottomRadius) },
+    [
+      h(
+        "a",
+        {
+          href: props.to,
+          class: baseRow,
+        },
+        [
+          h("div", { class: iconWrap }, [h(props.icon, { class: "h-4 w-4 text-gray-600" })]),
+          h("span", { class: labelCls, innerHTML: props.label }),
+          props.chevron
+            ? h(ChevronRight, { class: "h-5 w-5 text-gray-400" })
+            : null,
+        ]
+      ),
+    ]
+  );
+
+const MenuButton = (props, { emit }) =>
+  h(
+    "div",
+    { class: cardCls(props.noTopRadius, props.noBottomRadius) },
+    [
+      h(
+        "button",
+        {
+          type: "button",
+          class: baseRow,
+          onClick: () => emit("click"),
+        },
+        [
+          h("div", { class: iconWrap }, [h(props.icon, { class: "h-4 w-4 text-gray-600" })]),
+          h("span", { class: labelCls, innerHTML: props.label }),
+          props.hideChevron ? null : h(ChevronRight, { class: "h-5 w-5 text-gray-400" }),
+        ]
+      ),
+    ]
+  );
+</script>

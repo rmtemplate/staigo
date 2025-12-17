@@ -98,7 +98,8 @@ const properties = [
 
       <div class="flex items-center gap-3">
         <!-- Search -->
-        <div
+        <NuxtLink
+          to="/properties"
           class="flex min-w-0 flex-1 items-center gap-3 rounded-full bg-white px-4 py-3 transition hover:bg-gray-50"
           role="button"
           tabindex="0"
@@ -106,10 +107,10 @@ const properties = [
         >
           <img src="/images/icons/search.svg" alt="" class="h-5 w-5 shrink-0" />
           <span class="truncate text-xs text-gray-700/80">Mau nginep dimana?</span>
-        </div>
+        </NuxtLink>
 
         <!-- Notif -->
-        <button
+        <NuxtLink to="/notifications"
           type="button"
           class="relative inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white transition hover:bg-gray-50"
           aria-label="Notifikasi"
@@ -122,7 +123,7 @@ const properties = [
           >
             {{ notifCount > 99 ? '99+' : notifCount }}
           </span>
-        </button>
+        </NuxtLink>
       </div>
     </header>
 
