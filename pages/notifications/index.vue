@@ -54,6 +54,10 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 
+definePageMeta({
+    layout: "no-bottom",
+});
+
 const notifications = ref([
   {
     id: 1,

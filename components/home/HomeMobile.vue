@@ -37,6 +37,7 @@ const properties = [
   {
     id: 1,
     title: 'Staigo Abian Klumpu Villa Bali',
+    slug: 'staigo-abian-klumpu-villa-bali',
     location: 'Simalungun, Parapat',
     rating: 4.9,
     img: '/images/properties/1.png',
@@ -47,6 +48,7 @@ const properties = [
   {
     id: 2,
     title: 'Staigo Lakeside Cabin',
+    slug: 'staigo-lakeside-cabin',
     location: 'Toba, Sumatera Utara',
     rating: 4.8,
     img: '/images/properties/1.png',
@@ -57,6 +59,7 @@ const properties = [
   {
     id: 3,
     title: 'Staigo City Stay',
+    slug: 'staigo-city-stay',
     location: 'Medan, Sumatera Utara',
     rating: 4.7,
     img: '/images/properties/1.png',
@@ -67,6 +70,7 @@ const properties = [
   {
     id: 4,
     title: 'Staigo Ubud Escape',
+    slug: 'staigo-ubud-escape',
     location: 'Ubud, Bali',
     rating: 4.9,
     img: '/images/properties/1.png',
@@ -75,6 +79,7 @@ const properties = [
     to: '/'
   }
 ]
+
 </script>
 
 <template>
@@ -87,7 +92,7 @@ const properties = [
 
         <NuxtLink to="/" class="inline-flex items-center" aria-label="Kembali ke Beranda">
           <img
-            src="~/assets/images/logo/logo.png"
+            src="/images/logo/logo-putih.svg"
             alt="Nama Brand"
             class="h-8 w-auto object-contain"
             loading="eager"
@@ -134,7 +139,7 @@ const properties = [
           <div class="min-w-0">
             <div class="mb-2 flex items-center gap-2">
               <img
-                src="/images/icons/icon-point.png"
+                src="/images/icons/icon-point.svg"
                 width="14"
                 height="14"
                 class="h-3.5 w-3.5"
@@ -272,7 +277,7 @@ const properties = [
           class="w-50! sm:w-50! mb-4"
         >
           <NuxtLink
-            :to="p.to"
+            :to="`/properties/${p.slug}`"
             class="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-lg transition"
             :aria-label="p.title"
           >

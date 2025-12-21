@@ -22,7 +22,7 @@
             <div class="min-w-0">
               <div class="mb-2 flex items-center gap-2">
                 <img
-                  src="/images/icons/icon-point.png"
+                  src="/images/icons/icon-point.svg"
                   width="14"
                   height="14"
                   class="h-3.5 w-3.5"
