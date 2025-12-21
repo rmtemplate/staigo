@@ -193,38 +193,32 @@
         </div>
       </div>
 
-      <div class="w-full rounded-2xl bg-primary text-white px-3 py-5 shadow-lg flex justify-between items-center mb-8">
-        
-        <!-- Text Section -->
-        <div>
+      <div ref="roomSectionRef" class="scroll-mt-20">
+        <div class="w-full rounded-2xl bg-primary text-white px-3 py-5 shadow-lg flex justify-between items-center mb-8">
+
+          <!-- Text Section -->
+          <div>
             <p class="text-md font-semibold mb-2">Tanggal Menginap</p>
 
             <div class="flex items-center gap-2 text-xs font-medium">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    stroke-width="1.6" stroke="currentColor" class="w-4 h-4 opacity-90">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M6.75 3v2.25M17.25 3v2.25M3.75 18.75V7.5c0-1.243 
-                        1.007-2.25 2.25-2.25h12c1.243 0 2.25 1.007 
-                        2.25 2.25v11.25m-16.5 0A2.25 2.25 0 006 
-                        21h12a2.25 2.25 0 002.25-2.25m-16.5 
-                        0v-7.5c0-.621.504-1.125 1.125-1.125h14.25c.621 
-                        0 1.125.504 1.125 1.125v7.5" />
-                </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke-width="1.6" stroke="currentColor" class="w-4 h-4 opacity-90">
+                <path stroke-linecap="round" stroke-linejoin="round" :d="CALENDAR_D" />
+              </svg>
 
-                <span>18 Feb - 19 Feb, 1 Malam, 2 Kamar</span>
+              <span>{{ staySummary }}</span>
             </div>
-        </div>
+          </div>
 
-        <!-- Button -->
-        <button
+          <!-- Button -->
+          <button
+            @click.stop="openBookingSheet"
             class="rounded-xl px-4 py-2 text-sm font-semibold bg-linear-to-r from-orange-500 to-yellow-400 text-white shadow-md">
             Ubah
-        </button>
+          </button>
 
-    </div>
+        </div>
 
-
-      <div ref="roomSectionRef" class="scroll-mt-20">
         <CardRoom class="mb-6" title="Deluxe Double With Private Pool" :photos="photoCategories[0].photos"
           :fasilitas="fasilitas.slice(0, 6)" price="270.000" originalPrice="459.000" />
         <CardRoom class="mb-6" title="Executive Ocean View Suite" :photos="photoCategories[0].photos"
@@ -233,7 +227,9 @@
 
     </div>
 
+    <!-- Bottom bar (hide when roomSectionRef already touched) -->
     <div
+      v-show="!hideBottomBar"
       class="fixed bottom-0 left-0 w-full bg-white border-t border-slate-100 px-5 py-3 pb-safe z-[40] flex items-center justify-between shadow-[0_-5px_20px_rgba(0,0,0,0.05)] gap-3">
 
       <!-- Left: Price Info -->
@@ -257,7 +253,7 @@
 
         <button
           @click="scrollToRooms"
-          class="bg-primary text-white text-sm font-bold px-8 py-3 rounded-xl 
+          class="bg-primary text-white text-sm font-bold px-8 py-3 rounded-xl
                 shadow-lg shadow-blue-500/30 active:scale-95 transition-transform">
           Lihat Kamar
         </button>
@@ -275,6 +271,229 @@
 
       </div>
     </div>
+
+
+    <!-- ===== BottomSheet: Booking (Checkin/Checkout + Room&Guess) ===== -->
+    <BaseBottomSheet
+      v-model="isBookingOpen"
+      title="Ubah Tanggal Menginap"
+      bodyClass="px-0"
+      footerClass="pt-4 pb-5"
+      :draggable="true"
+      headerClass="pt-3 pb-3"
+    >
+      <div class="px-5">
+        <div class="bg-white my-3 overflow-hidden">
+          <!-- Dates -->
+          <button
+            type="button"
+            class="w-full text-left py-4 px-4 active:bg-gray-50"
+            @click="openDateSheet"
+          >
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-medium text-gray-500">Check-in</span>
+              <span class="text-xs font-medium text-gray-500">Check-out</span>
+            </div>
+
+            <div class="flex items-center justify-between mt-3">
+              <div class="flex items-center gap-2">
+                <CalendarDaysIcon class="w-5 h-5 text-primary" />
+                <span class="font-semibold text-[#242B42] text-[14px]">{{ checkIn }}</span>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-full border border-[#D7DDE3] flex items-center justify-center">
+                  <MoonIcon class="w-3.5 h-3.5 text-[#242B42]" />
+                </div>
+                <span class="text-[12px] font-semibold text-[#242B42]">
+                  {{ nights }} Malam
+                </span>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <CalendarDaysIcon class="w-5 h-5 text-primary" />
+                <span class="font-semibold text-[#242B42] text-[14px]">{{ checkOut }}</span>
+              </div>
+            </div>
+          </button>
+
+          <div class="h-px bg-[#E6E9ED] w-full"></div>
+
+          <!-- Room & Guess -->
+          <button
+            type="button"
+            class="w-full text-left py-4 px-4 active:bg-gray-50"
+            @click="openRoomGuest"
+          >
+            <span class="text-xs font-medium text-gray-500">Room &amp; Guess</span>
+            <div class="flex items-center gap-3 mt-2">
+              <UsersIcon class="w-5 h-5 text-primary" />
+              <span class="font-semibold text-[#242B42] text-[14px]">
+                {{ roomGuestLabel }}
+              </span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <template #footer>
+        <div class="px-5">
+          <button
+            type="button"
+            class="w-full bg-primary text-white rounded-full h-10 text-[14px] font-semibold shadow-[0_6px_14px_rgba(0,0,0,0.12)] active:scale-[0.99]"
+            @click="isBookingOpen = false"
+          >
+            Selesai
+          </button>
+        </div>
+      </template>
+    </BaseBottomSheet>
+
+    <!-- ===== BottomSheet: Set Date ===== -->
+    <BaseBottomSheet
+      v-model="isDateOpen"
+      title="Set Date"
+      bodyClass="px-0"
+      footerClass="pt-4 pb-5"
+      :draggable="true"
+      headerClass="pt-3 pb-3"
+    >
+      <RangeCalendar
+        v-model="draftRange"
+        :minDate="new Date()"
+        :disableBeforeMin="true"
+        :showTodayLabel="true"
+        locale="en-US"
+      />
+
+      <template #footer>
+        <div class="px-5">
+          <div class="flex items-end justify-between text-[#7A869A]">
+            <div class="w-[42%]">
+              <div class="text-[14px]">Check-in</div>
+              <div class="text-[18px] font-extrabold text-[#1F2433] mt-1">
+                {{ fmtLong(draftRange.start) }}
+              </div>
+            </div>
+
+            <div class="flex-1 px-3 pb-3">
+              <div class="border-b border-dashed border-[#7A869A]" />
+            </div>
+
+            <div class="w-[42%] text-right">
+              <div class="text-[14px]">Check-out</div>
+              <div class="text-[18px] font-extrabold text-[#1F2433] mt-1">
+                {{ fmtLong(draftRange.end) }}
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="mt-4 w-full bg-primary text-white rounded-full h-10 text-[14px] font-semibold
+                   shadow-[0_6px_14px_rgba(0,0,0,0.12)] active:scale-[0.99]"
+            :disabled="!draftRange.start || !draftRange.end"
+            :class="(!draftRange.start || !draftRange.end) ? 'opacity-50 cursor-not-allowed' : ''"
+            @click="saveDate"
+          >
+            Simpan ( {{ nightsFromDraft }} Malam )
+          </button>
+        </div>
+      </template>
+    </BaseBottomSheet>
+
+    <!-- ===== BottomSheet: Room & Guess ===== -->
+    <BaseBottomSheet
+      v-model="isRoomGuestOpen"
+      title="Room &amp; Guess"
+      bodyClass="px-0"
+      footerClass="pt-6 pb-6"
+      :draggable="true"
+      headerClass="pt-3 pb-3"
+    >
+      <div class="px-5">
+        <div class="py-5 flex items-center justify-between">
+          <div class="text-[16px] font-semibold text-[#1F2433]">Kamar</div>
+          <div class="flex items-center gap-4">
+            <button
+              class="w-10 h-10 rounded-full border border-[#DDE3EA] flex items-center justify-center active:scale-95"
+              @click="dec('rooms')"
+            >
+              <MinusIcon class="w-5 h-5 text-primary" />
+            </button>
+            <div class="w-6 text-center text-[16px] font-semibold text-[#1F2433]">
+              {{ draftRooms }}
+            </div>
+            <button
+              class="w-10 h-10 rounded-full border border-[#DDE3EA] flex items-center justify-center active:scale-95"
+              @click="inc('rooms')"
+            >
+              <PlusIcon class="w-5 h-5 text-primary" />
+            </button>
+          </div>
+        </div>
+
+        <div class="h-px bg-[#E6E9ED]" />
+
+        <div class="py-5 flex items-center justify-between">
+          <div class="text-[16px] font-semibold text-[#1F2433]">Dewasa</div>
+          <div class="flex items-center gap-4">
+            <button
+              class="w-10 h-10 rounded-full border border-[#DDE3EA] flex items-center justify-center active:scale-95"
+              @click="dec('adults')"
+            >
+              <MinusIcon class="w-5 h-5 text-primary" />
+            </button>
+            <div class="w-6 text-center text-[16px] font-semibold text-[#1F2433]">
+              {{ draftAdults }}
+            </div>
+            <button
+              class="w-10 h-10 rounded-full border border-[#DDE3EA] flex items-center justify-center active:scale-95"
+              @click="inc('adults')"
+            >
+              <PlusIcon class="w-5 h-5 text-primary" />
+            </button>
+          </div>
+        </div>
+
+        <div class="h-px bg-[#E6E9ED]" />
+
+        <div class="py-5 flex items-center justify-between">
+          <div class="text-[13px] font-semibold text-[#1F2433] leading-snug">
+            Anak ( dibawah 7 tahun )
+          </div>
+          <div class="flex items-center gap-4">
+            <button
+              class="w-10 h-10 rounded-full border border-[#DDE3EA] flex items-center justify-center active:scale-95"
+              @click="dec('kids')"
+            >
+              <MinusIcon class="w-5 h-5 text-primary" />
+            </button>
+            <div class="w-6 text-center text-[16px] font-semibold text-[#1F2433]">
+              {{ draftKidsU7 }}
+            </div>
+            <button
+              class="w-10 h-10 rounded-full border border-[#DDE3EA] flex items-center justify-center active:scale-95"
+              @click="inc('kids')"
+            >
+              <PlusIcon class="w-5 h-5 text-primary" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <template #footer>
+        <div class="px-5">
+          <button
+            type="button"
+            class="w-full bg-primary text-white rounded-full h-10 text-[14px] font-semibold shadow-[0_6px_14px_rgba(0,0,0,0.12)] active:scale-[0.99]"
+            @click="saveRoomGuest"
+          >
+            Simpan
+          </button>
+        </div>
+      </template>
+    </BaseBottomSheet>
 
 
     <BaseBottomSheet v-model="openPhotoSheet" title="Semua Foto" cancelText="Tutup">
@@ -303,45 +522,131 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from "vue"
-import { 
-  ChevronLeft, Share2, MapPin, Star, Calendar, 
-  Map, ShoppingBag, Plane, Coffee, Utensils,
-  ChevronRight
+import { useHead, useRequestURL } from "#imports"
+import {
+  ChevronLeft,
+  Share2,
+  MapPin,
+  Star,
+  Map,
+  ShoppingBag,
+  Plane,
+  Coffee,
+  ChevronRight,
+  CalendarDaysIcon,
+  MoonIcon,
+  UsersIcon,
+  MinusIcon,
+  PlusIcon,
 } from "lucide-vue-next"
 import { Swiper, SwiperSlide } from "swiper/vue"
 import { Autoplay, Pagination } from "swiper/modules"
 import "swiper/css"
 import "swiper/css/pagination"
 import BaseBottomSheet from "@/components/BaseBottomSheet.vue"
+import RangeCalendar, { type DateRangeValue } from "@/components/RangeCalendar.vue"
 
-definePageMeta({
-  layout: 'no-bottom'
-})
+definePageMeta({ layout: "no-bottom" })
 
-/* STATE & DATA */
-const isScrolled = ref(false)
+/** Single-line SVG path (avoid hydration mismatch) */
+const CALENDAR_D =
+  "M6.75 3v2.25M17.25 3v2.25M3.75 18.75V7.5c0-1.243 1.007-2.25 2.25-2.25h12c1.243 0 2.25 1.007 2.25 2.25v11.25m-16.5 0A2.25 2.25 0 006 21h12a2.25 2.25 0 002.25-2.25m-16.5 0v-7.5c0-.621.504-1.125 1.125-1.125h14.25c.621 0 1.125.504 1.125 1.125v7.5"
+
+/* ===== DATA YANG DIPAKAI SEO: definisikan dulu sebelum useHead() ===== */
 const pageTitle = "Staigo Abian Klumpu Villa Bali"
 const address = "Simalungun, Parapat, Sumatera Utara"
 
-// Scroll Listener
-const roomSectionRef = ref<HTMLElement | null>(null) // Ref untuk section kamar
+const photoCategories = [
+  { category: "Main", photos: ["/images/properties/1.png", "/images/properties/2.png"] },
+]
+const heroPhotos = photoCategories[0].photos
 
+/* ===== SEO Friendly ===== */
+const url = useRequestURL()
+const canonicalUrl = computed(() => `${url.origin}${url.pathname}`)
+const metaDescription = computed(
+  () => `${pageTitle} — cek foto, fasilitas populer, review tamu, dan pilihan kamar. Lokasi: ${address}.`
+)
+// image absolute (kalau heroPhotos kosong -> fallback)
+const ogImage = computed(() => {
+  const first = heroPhotos?.[0]
+  return first ? `${url.origin}${first}` : `${url.origin}/images/og-default.jpg`
+})
 
-// Function Smooth Scroll ke Kamar
+useHead({
+  title: `${pageTitle} | Detail Properti`,
+  link: [{ rel: "canonical", href: canonicalUrl.value }],
+  meta: [
+    { name: "description", content: metaDescription.value },
+    { name: "robots", content: "index,follow" },
+
+    { property: "og:type", content: "website" },
+    { property: "og:title", content: `${pageTitle} | Detail Properti` },
+    { property: "og:description", content: metaDescription.value },
+    { property: "og:url", content: canonicalUrl.value },
+    { property: "og:image", content: ogImage.value },
+
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: `${pageTitle} | Detail Properti` },
+    { name: "twitter:description", content: metaDescription.value },
+    { name: "twitter:image", content: ogImage.value },
+  ],
+  script: [
+    {
+      type: "application/ld+json",
+      // children: JSON.stringify({
+      //   "@context": "https://schema.org",
+      //   "@type": "Hotel",
+      //   name: pageTitle,
+      //   address: {
+      //     "@type": "PostalAddress",
+      //     addressLocality: "Parapat",
+      //     addressRegion: "Sumatera Utara",
+      //     addressCountry: "ID",
+      //     streetAddress: address,
+      //   },
+      //   url: canonicalUrl.value,
+      //   image: [ogImage.value],
+      //   aggregateRating: {
+      //     "@type": "AggregateRating",
+      //     ratingValue: 4.6,
+      //     reviewCount: 128,
+      //   },
+      // }),
+    },
+  ],
+})
+
+/* ===== STATE UI ===== */
+const isScrolled = ref(false)
+const openPhotoSheet = ref(false)
+const openFasilitasSheet = ref(false)
+const openSheet = () => (openPhotoSheet.value = true)
+const sharePage = () => {}
+
+/* ===== Hide bottom bar ketika roomSectionRef tersentuh ===== */
+const roomSectionRef = ref<HTMLElement | null>(null)
+const hideBottomBar = ref(false)
+
 function scrollToRooms() {
-  roomSectionRef.value?.scrollIntoView({ 
-    behavior: 'smooth',
-    block: 'start'
-  })
+  roomSectionRef.value?.scrollIntoView({ behavior: "smooth", block: "start" })
 }
 
 function handleScroll() {
   isScrolled.value = window.scrollY > 200
+  if (roomSectionRef.value) {
+    const rect = roomSectionRef.value.getBoundingClientRect()
+    hideBottomBar.value = rect.top <= window.innerHeight
+  }
 }
-onMounted(() => window.addEventListener("scroll", handleScroll))
+
+onMounted(() => {
+  window.addEventListener("scroll", handleScroll)
+  handleScroll()
+})
 onUnmounted(() => window.removeEventListener("scroll", handleScroll))
 
-/* NEARBY LOGIC */
+/* ===== Nearby ===== */
 const activeNearbyTab = ref("Semua")
 const nearbyTabs = ["Semua", "Wisata", "Belanja", "Transport", "Kuliner"]
 
@@ -349,15 +654,15 @@ const nearbyData = [
   { name: "Danau Toba", category: "Wisata", distance: "500 m", type: "Wisata", icon: Map },
   { name: "Parapat Point Mall", category: "Belanja", distance: "1.2 km", type: "Belanja", icon: ShoppingBag },
   { name: "Bandara Silangit", category: "Transport", distance: "45 km", type: "Transport", icon: Plane },
-  { name: "Coffee Shop Toba", category: "Kuliner", distance: "200 m", type: "Wisata", icon: Coffee }, // Masuk wisata for demo
+  { name: "Coffee Shop Toba", category: "Kuliner", distance: "200 m", type: "Wisata", icon: Coffee },
 ]
 
 const filteredNearby = computed(() => {
   if (activeNearbyTab.value === "Semua") return nearbyData
-  return nearbyData.filter(item => item.type === activeNearbyTab.value)
+  return nearbyData.filter((item) => item.type === activeNearbyTab.value)
 })
 
-/* OTHER DATA */
+/* ===== Fasilitas ===== */
 const fasilitas = [
   { id: 1, icon: "/images/icons/icon-fasilitas.svg", label: "Restoran" },
   { id: 2, icon: "/images/icons/icon-fasilitas.svg", label: "Kolam Renang" },
@@ -366,45 +671,114 @@ const fasilitas = [
   { id: 5, icon: "/images/icons/icon-fasilitas.svg", label: "Gym" },
 ]
 
-const photoCategories = [
-  { category: "Main", photos: ["/images/properties/1.png", "/images/properties/2.png"] }
-]
-const heroPhotos = photoCategories[0].photos
-const openPhotoSheet = ref(false)
-const openFasilitasSheet = ref(false)
-const openSheet = () => (openPhotoSheet.value = true)
-const sharePage = () => { /* Logic Share */ }
-
+/* ===== Reviews ===== */
 const reviews = [
-  {
-    name: "Rina",
-    rating: 5,
-    avatar: "/img/user1.jpg",
-    text: "Pelayanan sangat ramah, kamar bersih, lokasi dekat banget pusat kota!"
-  },
-  {
-    name: "Andi",
-    rating: 4.5,
-    avatar: "/img/user2.jpg",
-    text: "Staff sangat cepat respon, makanan enak, cuma AC agak berisik."
-  },
-  {
-    name: "Maya",
-    rating: 4,
-    avatar: "/img/user3.jpg",
-    text: "Harga sesuai kualitas. Recommend buat liburan sama keluarga."
-  }
-];
+  { name: "Rina", rating: 5, avatar: "/img/user1.jpg", text: "Pelayanan sangat ramah, kamar bersih, lokasi dekat banget pusat kota!" },
+  { name: "Andi", rating: 4.5, avatar: "/img/user2.jpg", text: "Staff sangat cepat respon, makanan enak, cuma AC agak berisik." },
+  { name: "Maya", rating: 4, avatar: "/img/user3.jpg", text: "Harga sesuai kualitas. Recommend buat liburan sama keluarga." },
+]
+
+/* ===== Booking Sheet (Ubah) ===== */
+const isBookingOpen = ref(false)
+const openBookingSheet = () => (isBookingOpen.value = true)
+
+/* Dates */
+const checkIn = ref("18 Feb")
+const checkOut = ref("19 Feb")
+const nights = ref(1)
+
+const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate())
+const addDays = (d: Date, n: number) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n)
+
+const bookingRange = ref<DateRangeValue>({
+  start: startOfDay(new Date()),
+  end: startOfDay(addDays(new Date(), 1)),
+})
+const draftRange = ref<DateRangeValue>({ start: null, end: null })
+
+const isDateOpen = ref(false)
+const openDateSheet = () => {
+  draftRange.value = { ...bookingRange.value }
+  isDateOpen.value = true
+}
+
+const diffDays = (a: Date, b: Date) => {
+  const ms = startOfDay(b).getTime() - startOfDay(a).getTime()
+  return Math.max(0, Math.round(ms / 86400000))
+}
+
+const nightsFromDraft = computed(() => {
+  if (!draftRange.value.start || !draftRange.value.end) return 0
+  return diffDays(draftRange.value.start, draftRange.value.end)
+})
+
+const fmtShort = (d: Date | null) => {
+  if (!d) return "-"
+  return new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short" }).format(d)
+}
+const fmtLong = (d: Date | null) => {
+  if (!d) return "-"
+  return new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric" }).format(d)
+}
+
+const saveDate = () => {
+  if (!draftRange.value.start || !draftRange.value.end) return
+  bookingRange.value = { ...draftRange.value }
+  checkIn.value = fmtShort(bookingRange.value.start)
+  checkOut.value = fmtShort(bookingRange.value.end)
+  nights.value = diffDays(bookingRange.value.start!, bookingRange.value.end!)
+  isDateOpen.value = false
+}
+
+/* Room & Guess */
+const rooms = ref(2)
+const adults = ref(2)
+const kidsU7 = ref(0)
+
+const isRoomGuestOpen = ref(false)
+const draftRooms = ref(2)
+const draftAdults = ref(2)
+const draftKidsU7 = ref(0)
+
+const roomGuestLabel = computed(() => `${rooms.value} Kamar, ${adults.value} Dewasa`)
+
+const openRoomGuest = () => {
+  draftRooms.value = rooms.value
+  draftAdults.value = adults.value
+  draftKidsU7.value = kidsU7.value
+  isRoomGuestOpen.value = true
+}
+
+const saveRoomGuest = () => {
+  rooms.value = draftRooms.value
+  adults.value = draftAdults.value
+  kidsU7.value = draftKidsU7.value
+  isRoomGuestOpen.value = false
+}
+
+const dec = (k: "rooms" | "adults" | "kids") => {
+  if (k === "rooms") draftRooms.value = Math.max(1, draftRooms.value - 1)
+  if (k === "adults") draftAdults.value = Math.max(1, draftAdults.value - 1)
+  if (k === "kids") draftKidsU7.value = Math.max(0, draftKidsU7.value - 1)
+}
+const inc = (k: "rooms" | "adults" | "kids") => {
+  if (k === "rooms") draftRooms.value = Math.min(9, draftRooms.value + 1)
+  if (k === "adults") draftAdults.value = Math.min(20, draftAdults.value + 1)
+  if (k === "kids") draftKidsU7.value = Math.min(20, draftKidsU7.value + 1)
+}
+
+const staySummary = computed(() => `${checkIn.value} - ${checkOut.value}, ${nights.value} Malam, ${rooms.value} Kamar`)
 </script>
+
 
 <style scoped>
 /* Custom Scrollbar Hide */
 .scrollbar-hide::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 :deep(.swiper-pagination-bullet) {

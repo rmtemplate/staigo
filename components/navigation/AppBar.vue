@@ -51,7 +51,7 @@ const goBack = () => {
 }
 
 const headerClass = computed(() => [
-  'flex items-center h-14 px-5 z-2 relative sticky top-0',
+  'flex items-center h-14 px-5 z-2 relative sticky top-0 max-w-md mx-auto',
   props.shadow ? 'shadow-sm' : '',
   props.bgClass
 ])

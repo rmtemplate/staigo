@@ -10,33 +10,34 @@
       class="sticky top-0 z-40 border-b border-gray-100"
     />
 
-    <section    class="bg-white px-5 pt-6 pb-8 rounded-b-[2rem] shadow-sm relative z-10">
-        <div class="flex flex-row items-center justify-start gap-4 text-left">
-            
-            <div class="relative">
-                <h1 class="font-display font-bold text-[3.5rem] text-[var(--ui-primary)] leading-none tracking-tight">
-                4.8
-                </h1>
+    <section class="bg-white px-5 pt-6 pb-8 rounded-b-[2rem] shadow-sm relative z-10">
+      <div class="flex flex-row items-center justify-start gap-4 text-left">
 
-                <div class="absolute -right-6 top-2 rotate-12 bg-yellow-100 text-yellow-700 text-[10px] font-bold px-1.5 py-0.5 rounded-md border border-yellow-200">
-                TOP
-                </div>
-            </div>
+        <div class="relative">
+          <h1 class="font-display font-bold text-[3.5rem] text-[var(--ui-primary)] leading-none tracking-tight">
+            4.8
+          </h1>
 
-            <div class="flex flex-col">
-                <p class="text-gray-900 font-semibold text-lg">Luar Biasa</p>
-                
-                <div class="flex gap-1 mt-1 mb-2">
-                <StarRating :rating="4.8" :size="20" />
-                </div>
-
-                <p class="text-xs text-gray-500 font-medium bg-gray-100 px-3 py-1 rounded-full w-fit">
-                Berdasarkan 214 ulasan terverifikasi
-                </p>
-            </div>
-
+          <div
+            class="absolute -right-6 top-2 rotate-12 bg-yellow-100 text-yellow-700 text-[10px] font-bold px-1.5 py-0.5 rounded-md border border-yellow-200"
+          >
+            TOP
+          </div>
         </div>
 
+        <div class="flex flex-col">
+          <p class="text-gray-900 font-semibold text-lg">Luar Biasa</p>
+
+          <div class="flex gap-1 mt-1 mb-2">
+            <StarRating :rating="4.8" :size="20" />
+          </div>
+
+          <p class="text-xs text-gray-500 font-medium bg-gray-100 px-3 py-1 rounded-full w-fit">
+            Berdasarkan 214 ulasan terverifikasi
+          </p>
+        </div>
+
+      </div>
 
       <div class="mt-8 grid grid-cols-2 gap-x-6 gap-y-4">
         <div
@@ -83,7 +84,7 @@
     </section>
 
     <section class="px-5 py-6 space-y-5">
-      
+
       <div v-if="filteredReviews.length === 0" class="text-center py-10">
         <div class="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm">
           <Filter class="w-6 h-6 text-gray-400" />
@@ -112,7 +113,7 @@
               <p class="text-[11px] text-gray-400 font-medium mt-0.5">{{ item.date }}</p>
             </div>
           </div>
-          
+
           <div class="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-lg border border-yellow-100">
             <Star class="w-3 h-3 text-yellow-500 fill-yellow-500" />
             <span class="text-xs font-bold text-yellow-700">{{ item.rating }}</span>
@@ -124,29 +125,29 @@
         </p>
 
         <div v-if="item.photos.length" class="mt-4">
-            <Swiper
-                :slides-per-view="3"
-                :space-between="5"
-                :centered-slides="false"
-                :center-insufficient-slides="false"
-                :slides-offset-after="20"
-                class="rounded-xl"
+          <Swiper
+            :slides-per-view="3"
+            :space-between="5"
+            :centered-slides="false"
+            :center-insufficient-slides="false"
+            :slides-offset-after="20"
+            class="rounded-xl"
+          >
+            <SwiperSlide
+              v-for="(img, idx) in item.photos"
+              :key="idx"
+              class="rounded-xl overflow-hidden border border-gray-100 cursor-zoom-in"
+              @click="openPhoto(img)"
             >
-                <SwiperSlide
-                v-for="(img, idx) in item.photos"
-                :key="idx"
-                class="rounded-xl overflow-hidden border border-gray-100 cursor-zoom-in"
-                @click="openPhoto(img)"
-                >
-                <img
-                    :src="img"
-                    class="w-full h-32 object-cover"
-                    loading="lazy"
-                />
-                </SwiperSlide>
-            </Swiper>
-            </div>
-
+              <img
+                :src="img"
+                class="w-full h-32 object-cover"
+                loading="lazy"
+                :alt="`Foto ulasan ${item.name} #${idx+1}`"
+              />
+            </SwiperSlide>
+          </Swiper>
+        </div>
       </article>
 
     </section>
@@ -168,6 +169,7 @@
           :src="photoView"
           class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
           @click.stop
+          alt="Foto ulasan"
         />
         <button
           class="absolute top-6 right-6 p-2 bg-white/10 rounded-full hover:bg-white/20 transition"
@@ -183,102 +185,24 @@
 
 <script lang="ts" setup>
 import { ref, computed } from "vue"
+import { useHead, useRequestURL } from "#imports"
 import {
   MapPin, BadgePercent, House, Sparkles, Shield, Wifi, Droplet,
   HeartHandshake, Filter, Image as ImgIcon, Star, Lightbulb, X
 } from "lucide-vue-next"
 
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import 'swiper/css'
+import { Swiper, SwiperSlide } from "swiper/vue"
+import "swiper/css"
 
-// --- SEO CONFIGURATION ---
-useHead({
-  title: 'Review Properti - Staigo',
-  meta: [
-    { name: 'description', content: 'Lihat ulasan jujur, rating kebersihan, dan foto dari penyewa sebelumnya untuk properti ini di Staigo.' },
-    { name: 'robots', content: 'noindex, nofollow' } // Hapus ini jika page sudah live public
-  ]
-})
+/* ===== Property Context (dipakai SEO) ===== */
+const propertyName = "Staigo Abian Klumpu Villa Bali"
+const address = "Simalungun, Parapat, Sumatera Utara"
 
-definePageMeta({
-  layout: 'no-bottom'
-})
+// Summary rating yang kamu tampilkan di UI
+const ratingValue = 4.8
+const reviewCount = 214
 
-// --- DATA: CATEGORIES ---
-const categoryList = [
-  { title: "Lokasi", icon: MapPin, score: 4.9 },
-  { title: "Harga", icon: BadgePercent, score: 4.7 },
-  { title: "Kebersihan", icon: Sparkles, score: 4.8 },
-  { title: "Fasilitas", icon: House, score: 4.6 },
-  { title: "Keamanan", icon: Shield, score: 4.8 },
-  { title: "Wifi", icon: Wifi, score: 4.9 },
-  { title: "Air", icon: Droplet, score: 4.5 },
-  { title: "Pelayanan", icon: HeartHandshake, score: 4.8 },
-]
-
-// --- STATE: FILTERS ---
-const ratingSelected = ref(0)
-const photoFilter = ref("all")
-const sortMode = ref("default")
-const photoView = ref<string | null>(null)
-
-const mainFilters = ref([
-  {
-    label: "Semua",
-    icon: Filter,
-    active: true,
-    apply: () => resetFilter()
-  },
-  {
-    label: "Ada Foto",
-    icon: ImgIcon,
-    active: false,
-    apply: () => {
-      photoFilter.value = "withPhoto"
-      // Jika rating sudah dipilih, biarkan. Jika belum, reset logic lain jika perlu
-    }
-  },
-  {
-    label: "Bintang 5",
-    icon: Star,
-    active: false,
-    apply: () => ratingSelected.value = 5
-  },
-  {
-    label: "Terbaru",
-    icon: Lightbulb,
-    active: false,
-    apply: () => sortMode.value = "newest"
-  },
-])
-
-function applyFilter(filter: any){
-  // Reset visual active state
-  mainFilters.value.forEach(f => f.active = false)
-  
-  // Set current active
-  filter.active = true
-  
-  // Reset logic state partials if 'Semua' selected, otherwise stack logic appropriately
-  if(filter.label === "Semua") {
-    resetFilter()
-    return
-  }
-  
-  // Jalankan logic filter
-  filter.apply()
-}
-
-function resetFilter(){
-  photoFilter.value = "all"
-  ratingSelected.value = 0
-  sortMode.value = "default"
-  
-  // Ensure visual state follows
-  mainFilters.value.forEach(f => f.active = (f.label === "Semua"))
-}
-
-// --- DATA: REVIEWS ---
+/* ===== Reviews Data ===== */
 const reviews = ref([
   {
     id: 1,
@@ -291,8 +215,8 @@ const reviews = ref([
       "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=600&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=600&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=600&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=600&auto=format&fit=crop"
-    ]
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=600&auto=format&fit=crop",
+    ],
   },
   {
     id: 2,
@@ -301,7 +225,7 @@ const reviews = ref([
     date: "27 Jan 2025",
     rating: 3,
     comment: "Lumayan untuk harga segini, tapi perabot ada yang sedikit berdebu saat check-in.",
-    photos: []
+    photos: [],
   },
   {
     id: 3,
@@ -312,44 +236,160 @@ const reviews = ref([
     comment: "Super rekomendasi! Lokasi strategis dekat stasiun MRT. Pasti bakal balik lagi.",
     photos: [
       "https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=600&auto=format&fit=crop",
-    ]
-  }
+    ],
+  },
 ])
 
-// --- COMPUTED: FILTER LOGIC ---
+/* ===== SEO ===== */
+const url = useRequestURL()
+const canonicalUrl = computed(() => `${url.origin}${url.pathname}`)
+
+const metaDescription = computed(() => {
+  return `Ulasan ${propertyName}: rating ${ratingValue}/5 dari ${reviewCount} ulasan. Lihat review, skor kategori, dan foto tamu. Lokasi: ${address}.`
+})
+
+// pakai foto pertama yang ada di reviews (kalau ada) untuk og image
+const ogImage = computed(() => {
+  const withPhoto = reviews.value.find(r => r.photos?.length)
+  return withPhoto?.photos?.[0] || `${url.origin}/images/og-default.jpg`
+})
+
+// JSON-LD Review: batasi jumlah supaya tidak kebanyakan, tapi cukup kuat buat SEO
+const jsonLdReviews = computed(() => {
+  return reviews.value.slice(0, 10).map((r) => ({
+    "@type": "Review",
+    reviewRating: { "@type": "Rating", ratingValue: r.rating, bestRating: 5, worstRating: 1 },
+    author: { "@type": "Person", name: r.name },
+    reviewBody: r.comment,
+    datePublished: r.date, // kalau bisa, pakai ISO date agar lebih valid (YYYY-MM-DD)
+  }))
+})
+
+useHead({
+  title: `Ulasan ${propertyName} | Review & Rating`,
+  link: [{ rel: "canonical", href: canonicalUrl.value }],
+  meta: [
+    { name: "description", content: metaDescription.value },
+    { name: "robots", content: "index,follow" },
+
+    { property: "og:type", content: "website" },
+    { property: "og:title", content: `Ulasan ${propertyName}` },
+    { property: "og:description", content: metaDescription.value },
+    { property: "og:url", content: canonicalUrl.value },
+    { property: "og:image", content: ogImage.value },
+
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: `Ulasan ${propertyName}` },
+    { name: "twitter:description", content: metaDescription.value },
+    { name: "twitter:image", content: ogImage.value },
+  ],
+  script: [
+    {
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Hotel",
+        name: propertyName,
+        url: canonicalUrl.value,
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: address,
+          addressRegion: "Sumatera Utara",
+          addressCountry: "ID",
+        },
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue,
+          reviewCount,
+          bestRating: 5,
+          worstRating: 1,
+        },
+        review: jsonLdReviews.value,
+      }),
+    },
+  ],
+})
+
+definePageMeta({ layout: "no-bottom" })
+
+/* ===== Category list ===== */
+const categoryList = [
+  { title: "Lokasi", icon: MapPin, score: 4.9 },
+  { title: "Harga", icon: BadgePercent, score: 4.7 },
+  { title: "Kebersihan", icon: Sparkles, score: 4.8 },
+  { title: "Fasilitas", icon: House, score: 4.6 },
+  { title: "Keamanan", icon: Shield, score: 4.8 },
+  { title: "Wifi", icon: Wifi, score: 4.9 },
+  { title: "Air", icon: Droplet, score: 4.5 },
+  { title: "Pelayanan", icon: HeartHandshake, score: 4.8 },
+]
+
+/* ===== Filter State ===== */
+const ratingSelected = ref(0)
+const photoFilter = ref<"all" | "withPhoto">("all")
+const sortMode = ref<"default" | "newest">("default")
+const photoView = ref<string | null>(null)
+
+const mainFilters = ref([
+  { label: "Semua", icon: Filter, active: true, apply: () => resetFilter() },
+  {
+    label: "Ada Foto",
+    icon: ImgIcon,
+    active: false,
+    apply: () => { photoFilter.value = "withPhoto" },
+  },
+  {
+    label: "Bintang 5",
+    icon: Star,
+    active: false,
+    apply: () => { ratingSelected.value = 5 },
+  },
+  {
+    label: "Terbaru",
+    icon: Lightbulb,
+    active: false,
+    apply: () => { sortMode.value = "newest" },
+  },
+])
+
+function applyFilter(filter: any) {
+  mainFilters.value.forEach((f) => (f.active = false))
+  filter.active = true
+
+  if (filter.label === "Semua") {
+    resetFilter()
+    return
+  }
+  filter.apply()
+}
+
+function resetFilter() {
+  photoFilter.value = "all"
+  ratingSelected.value = 0
+  sortMode.value = "default"
+  mainFilters.value.forEach((f) => (f.active = f.label === "Semua"))
+}
+
+/* ===== Computed Filter Logic ===== */
 const filteredReviews = computed(() => {
   let output = [...reviews.value]
 
-  // Filter by Photo
-  if(photoFilter.value === "withPhoto")
-    output = output.filter(r => r.photos.length > 0)
+  if (photoFilter.value === "withPhoto") output = output.filter((r) => r.photos.length > 0)
+  if (ratingSelected.value > 0) output = output.filter((r) => Math.floor(r.rating) === ratingSelected.value)
 
-  // Filter by Rating
-  if(ratingSelected.value > 0)
-    output = output.filter(r => Math.floor(r.rating) === ratingSelected.value)
-
-  // Sort
-  if(sortMode.value === "newest") {
-    // Asumsi ID lebih besar = lebih baru, real world use Date objects
-    output = output.sort((a,b)=> b.id - a.id)
+  if (sortMode.value === "newest") {
+    output = output.sort((a, b) => b.id - a.id)
   }
 
   return output
 })
 
-// --- ACTIONS ---
-function openPhoto(src: string){
+function openPhoto(src: string) {
   photoView.value = src
 }
 </script>
 
 <style scoped>
-/* Utility untuk menyembunyikan scrollbar tapi tetap bisa di-scroll */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 </style>

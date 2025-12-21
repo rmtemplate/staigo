@@ -148,7 +148,7 @@ defineExpose({ open, close })
     >
       <div
         v-if="modelValue"
-        class="fixed inset-0 z-40 bg-black/40"
+        class="fixed inset-0 z-40 bg-black/40 max-w-md mx-auto"
         :class="overlayClass"
         @click.self="closeOnOverlay ? close() : undefined"
       />
@@ -165,7 +165,7 @@ defineExpose({ open, close })
     >
       <div v-if="modelValue" class="fixed inset-x-0 bottom-0 z-50">
         <div
-          class="bg-white rounded-t-[28px] overflow-hidden flex flex-col max-h-[95vh]"
+          class="bg-white rounded-t-[28px] overflow-hidden flex flex-col max-h-[95vh] max-w-md mx-auto"
           :class="sheetClass"
           :style="{
             transform: `translateY(${dragOffsetY}px)`,

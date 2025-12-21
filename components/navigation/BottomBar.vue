@@ -21,7 +21,7 @@ const isActive = (to) => (to === '/' ? route.path === '/' : route.path === to)
 
 <template>
   <nav
-    class="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200 bg-white"
+    class="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200 bg-white max-w-md mx-auto"
     style="padding-bottom: env(safe-area-inset-bottom);"
     role="navigation"
     aria-label="Bottom navigation"

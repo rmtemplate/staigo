@@ -1,14 +1,13 @@
 <template>
   <div>
     <!-- Mobile -->
-    <div class="md:hidden">
+    <div>
       <HomeMobile />
     </div>
 
-    <!-- Desktop -->
-    <div class="hidden md:block">
+    <!-- <div class="hidden md:block">
       <HomeDesktop />
-    </div>
+    </div> -->
   </div>
 </template>
 

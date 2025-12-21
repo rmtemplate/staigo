@@ -4,10 +4,10 @@ import BottomBar from '~/components/navigation/BottomBar.vue'
 
 <template>
   <div class="min-h-screen flex flex-col">
-    <main class="flex-1 pb-16 md:pb-0">
+    <main class="flex-1 pb-16">
       <slot />
     </main>
 
-    <BottomBar class="md:hidden" />
+    <BottomBar/>
   </div>
 </template>
