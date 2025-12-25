@@ -343,40 +343,40 @@ useHead({
   script: [
     {
       type: "application/ld+json",
-      children: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "HotelRoom",
-        name: pageTitle,
-        description: fullDescription,
-        image: heroPhotos,
-        occupancy: {
-          "@type": "QuantitativeValue",
-          value: 2,
-          unitCode: "C62",
-        },
-        amenityFeature: fasilitas.map((f) => ({
-          "@type": "LocationFeatureSpecification",
-          name: f.label,
-          value: true,
-        })),
-        containedInPlace: {
-          "@type": "Hotel",
-          name: "Staigo Abian Klumpu Villa Bali",
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: address,
-            addressRegion: "Sumatera Utara",
-            addressCountry: "ID",
-          },
-        },
-        offers: {
-          "@type": "Offer",
-          priceCurrency: "IDR",
-          price: grandTotal.value,
-          availability: roomStock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-          url: canonicalUrl.value,
-        },
-      }),
+      // children: JSON.stringify({
+      //   "@context": "https://schema.org",
+      //   "@type": "HotelRoom",
+      //   name: pageTitle,
+      //   description: fullDescription,
+      //   image: heroPhotos,
+      //   occupancy: {
+      //     "@type": "QuantitativeValue",
+      //     value: 2,
+      //     unitCode: "C62",
+      //   },
+      //   amenityFeature: fasilitas.map((f) => ({
+      //     "@type": "LocationFeatureSpecification",
+      //     name: f.label,
+      //     value: true,
+      //   })),
+      //   containedInPlace: {
+      //     "@type": "Hotel",
+      //     name: "Staigo Abian Klumpu Villa Bali",
+      //     address: {
+      //       "@type": "PostalAddress",
+      //       streetAddress: address,
+      //       addressRegion: "Sumatera Utara",
+      //       addressCountry: "ID",
+      //     },
+      //   },
+      //   offers: {
+      //     "@type": "Offer",
+      //     priceCurrency: "IDR",
+      //     price: grandTotal.value,
+      //     availability: roomStock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      //     url: canonicalUrl.value,
+      //   },
+      // }),
     },
   ],
 })
